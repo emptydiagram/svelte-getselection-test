@@ -4,7 +4,8 @@
 
 	afterUpdate(() => {
     let theInput = document.getElementById("the-input");
-    if (theInput) {
+    if (theInput && isToggling) {
+      isToggling = false;
       console.log("  aU!!!  selStart = ", selStart);
       theInput.selectionStart = selStart;
       theInput.selectionEnd = selStart;
@@ -14,26 +15,27 @@
 
 
   let isEditing = false;
+  let isToggling = false;
   let inputValue = "this is some text that you can click on";
   let selStart;
 
 
-  function handleMousedown(ev) {
-    console.log(" hmd: ", ev);
-
-    /*
+  document.addEventListener('selectionchange', (ev) => {
+    let sel = document.getSelection();
     let theSpan = document.getElementById("the-span");
-    inputValue = theSpan.innerHTML;
-     */
+    if (theSpan && sel.anchorNode === theSpan.firstChild) {
+      selStart = sel.anchorOffset;
+      isEditing = true;
+      isToggling = true;
+    } else {
+      console.log("skipping OSC");
+    }
+  });
 
-    let sel = window.getSelection();
-    console.log(" hM, anchorOffset = ", sel.anchorOffset);
-    selStart = sel.anchorOffset;
-
-    // theInput.style.display = 'inline';
-    // ev.target.style.display = 'none';
-    isEditing = true;
+  function handleBlur(ev) {
+    isEditing = false;
   }
+
 </script>
 
 <style>
@@ -45,7 +47,7 @@
 <h1>Hello {name}!</h1>
 
 {#if isEditing}
-  <input id="the-input" type="text" bind:value={inputValue} />
+  <input id="the-input" type="text" bind:value={inputValue} on:blur={handleBlur} />
 {:else}
-  <span id="the-span" on:mousedown={handleMousedown}>{inputValue}</span>
+  <span id="the-span">{inputValue}</span>
 {/if}
