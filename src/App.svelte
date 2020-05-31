@@ -5,6 +5,7 @@
 	afterUpdate(() => {
     let theInput = document.getElementById("the-input");
     if (theInput) {
+      console.log("  aU!!!  selStart = ", selStart);
       theInput.selectionStart = selStart;
       theInput.selectionEnd = selStart;
       theInput.focus();
@@ -14,7 +15,6 @@
 
   let isEditing = false;
   let inputValue = "this is some text that you can click on";
-  let spanValue;
   let selStart;
 
 
@@ -27,7 +27,6 @@
      */
 
     let sel = window.getSelection();
-    console.log(" aU: ", sel);
     console.log(" hM, anchorOffset = ", sel.anchorOffset);
     selStart = sel.anchorOffset;
 
